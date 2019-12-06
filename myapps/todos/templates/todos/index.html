@@ -1,0 +1,35 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}
+  Todos | Home
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <form action="{% url 'todos:create' %}" method="post">
+      {% csrf_token %}
+      <div class="input-group mb-4">
+        <input type="text" name="title" class="form-control" placeholder="Insert Todo...(min 5 characters)">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="submit">Create ToDo</button>
+        </div>
+      </div>
+    </form>
+    <ul class="list-group">
+      {% for todo in todos %}
+        <li class="list-group-item d-flex align-items-center justify-content-between">
+          {{ todo }}{% if todo.is_completed %} (completed) {% endif %}
+          <div>
+            {% if todo.is_completed %}
+              <a href="{% url 'todos:complete' todo_id=todo.id %}" class="btn btn-sm btn-info mr-2 disabled">Complete</a>
+            {% else %}
+              <a href="{% url 'todos:complete' todo_id=todo.id %}" class="btn btn-sm btn-info mr-2">Complete</a>
+            {% endif %}
+            <a href="{% url 'todos:delete' todo_id=todo.id %}" class="btn btn-sm btn-danger">Delete</a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}
